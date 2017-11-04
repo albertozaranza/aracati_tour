@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Aracati Tour</string>
+
+    <string name="restaurantes">Restaurantes</string>
+    <string name="hoteis">Hotéis</string>
+    <string name="pontos_historicos">Pontos Históricos</string>
+    <string name="mapa">Mapa</string>
+    <string name="buscar">Buscar</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
