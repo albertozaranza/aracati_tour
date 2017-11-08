@@ -1,5 +1,6 @@
 package br.edu.ifce.aracatitour.activity;
 
+import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,12 +25,14 @@ public class ListActivity extends AppCompatActivity {
     ArrayList<String> itens;
     ArrayAdapter<String> adapter;
     ListView listaItens;
-    //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
 
         try{
             Bundle extra = getIntent().getExtras();
@@ -41,8 +44,7 @@ public class ListActivity extends AppCompatActivity {
             switch (BUTTON){
                 case 1:
 
-                    /*toolbar.setTitle(R.string.restaurantes);
-                    setSupportActionBar(toolbar);*/
+                    actionBar.setTitle(R.string.restaurantes);
 
                     itens = manageDatabase.getAllItens("RESTAURANTE", "NOME");
 
@@ -68,8 +70,7 @@ public class ListActivity extends AppCompatActivity {
 
                 case 2:
 
-                    /*toolbar.setTitle(R.string.hoteis);
-                    setSupportActionBar(toolbar);*/
+                    actionBar.setTitle(R.string.hoteis);
 
                     itens = manageDatabase.getAllItens("HOTEL", "NOME");
 
@@ -95,8 +96,7 @@ public class ListActivity extends AppCompatActivity {
 
                 case 3:
 
-                    /*toolbar.setTitle(R.string.pontos_historicos);
-                    setSupportActionBar(toolbar);*/
+                    actionBar.setTitle(R.string.pontos_historicos);
 
                     itens = manageDatabase.getAllItens("PONTO_HISTORICO", "NOME");
 

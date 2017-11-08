@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -27,15 +28,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: 03/11/2017 OTIMIZAR AS LISTVIEW
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setTitle(R.string.app_name);
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
-        setSupportActionBar(toolbar);*/
+        // TODO: 03/11/2017 OTIMIZAR AS LISTVIEW
 
         Permissao.validaPermissoes(this, permissoesNecessarias, 1);
 
-        sharedPreferences = getSharedPreferences("firstRun", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("first_run", MODE_PRIVATE);
 
         Button btnRestaurante = (Button) findViewById(R.id.btn_res);
         Button btnHotel = (Button) findViewById(R.id.btn_hot);
@@ -83,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (sharedPreferences.getBoolean("firstRun", true)) {
-            sharedPreferences.edit().putBoolean("firstRun", false).apply();
+        if (sharedPreferences.getBoolean("first_run", true)) {
+            sharedPreferences.edit().putBoolean("first_run", false).commit();
             Toast.makeText(getApplicationContext(), "Criando banco", Toast.LENGTH_SHORT).show();
             manageDatabase.addItem();
             Toast.makeText(getApplicationContext(), "Banco criado", Toast.LENGTH_SHORT).show();

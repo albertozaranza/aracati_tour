@@ -51,8 +51,10 @@ public class DefaultActivity extends AppCompatActivity {
                 celular.setText(cursor.getString(cursor.getColumnIndex("CELULAR")));
                 telefone.setText(cursor.getString(cursor.getColumnIndex("TELEFONE_FIXO")));
                 //imagem.setImageResource(cursor.getInt(cursor.getColumnIndex("IMAGEM")));
-                cursor.close();
+                cursor.moveToNext();
             }
+            cursor.close();
+            db.close();
         }catch (Exception e){
             e.printStackTrace();
         }

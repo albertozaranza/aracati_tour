@@ -2,6 +2,8 @@ package br.edu.ifce.aracatitour.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +20,10 @@ import br.edu.ifce.aracatitour.R;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private double latitude;
+    private double longitude;
+    private String nome;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.clear();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -52,9 +59,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mMap.setMyLocationEnabled(true);
+        /*mMap.setMyLocationEnabled(true);*/
 
-        // Add a marker in Sydney and move the camera
         LatLng aracati = new LatLng(-4.5612094, -37.7688612);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(aracati, 15));
 
@@ -62,5 +68,78 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .title("Aracati")
                 .snippet("Terra dos Bons Ventos.")
                 .position(aracati));
+
+        getRestaurantes();
+        getHoteis();
+        getPontosHistoricos();
+
+    }
+
+    private void getRestaurantes(){
+        try {
+            SQLiteDatabase db = openOrCreateDatabase("aracatitour", MODE_PRIVATE, null);
+
+            Cursor cursor = db.rawQuery("SELECT NOME, LATITUDE, LONGITUDE FROM RESTAURANTE", null);
+
+            cursor.moveToFirst();
+
+            while (cursor != null) {
+                latitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LATITUDE")));
+                longitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LONGITUDE")));
+                nome = cursor.getString(cursor.getColumnIndex("NOME"));
+                LatLng latLng = new LatLng(latitude, longitude);
+                mMap.addMarker(new MarkerOptions().position(latLng).title(nome));
+                cursor.moveToNext();
+            }
+            cursor.close();
+            db.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getHoteis(){
+        try {
+            SQLiteDatabase db = openOrCreateDatabase("aracatitour", MODE_PRIVATE, null);
+
+            Cursor cursor = db.rawQuery("SELECT NOME, LATITUDE, LONGITUDE FROM HOTEL", null);
+
+            cursor.moveToFirst();
+            while (cursor != null) {
+                latitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LATITUDE")));
+                longitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LONGITUDE")));
+                nome = cursor.getString(cursor.getColumnIndex("NOME"));
+                LatLng latLng = new LatLng(latitude, longitude);
+                mMap.addMarker(new MarkerOptions().position(latLng).title(nome));
+                cursor.moveToNext();
+            }
+            cursor.close();
+            db.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getPontosHistoricos(){
+        try {
+            SQLiteDatabase db = openOrCreateDatabase("aracatitour", MODE_PRIVATE, null);
+
+            Cursor cursor = db.rawQuery("SELECT NOME, LATITUDE, LONGITUDE FROM PONTO_HISTORICO", null);
+
+            cursor.moveToFirst();
+
+            while (cursor != null) {
+                latitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LATITUDE")));
+                longitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LONGITUDE")));
+                nome = cursor.getString(cursor.getColumnIndex("NOME"));
+                LatLng latLng = new LatLng(latitude, longitude);
+                mMap.addMarker(new MarkerOptions().position(latLng).title(nome));
+                cursor.moveToNext();
+            }
+            cursor.close();
+            db.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
