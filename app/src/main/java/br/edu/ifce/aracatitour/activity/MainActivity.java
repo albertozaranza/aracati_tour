@@ -4,8 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,11 +28,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle(R.string.app_name);
-
-        // TODO: 03/11/2017 OTIMIZAR AS LISTVIEW
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.app_name);
 
         Permissao.validaPermissoes(this, permissoesNecessarias, 1);
 
@@ -42,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
         Button btnHotel = (Button) findViewById(R.id.btn_hot);
         Button btnPontosHistoricos = (Button) findViewById(R.id.btn_pnt);
         Button btnMapa = (Button) findViewById(R.id.btn_map);
-
-        // TODO: 17/10/2017 INTERFACE COM BUSCA EM CADA LAYOUT
 
         btnRestaurante.setOnClickListener(new View.OnClickListener() {
             @Override

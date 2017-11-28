@@ -12,6 +12,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -23,7 +24,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double latitude;
     private double longitude;
     private String nome;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,25 +59,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        /*mMap.setMyLocationEnabled(true);*/
+        mMap.setMyLocationEnabled(true);
 
         LatLng aracati = new LatLng(-4.5612094, -37.7688612);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(aracati, 15));
 
         mMap.addMarker(new MarkerOptions()
                 .title("Aracati")
-                .snippet("Terra dos Bons Ventos.")
+                .snippet("Terra dos Bons Ventos")
                 .position(aracati));
 
         getRestaurantes();
         getHoteis();
         getPontosHistoricos();
-
     }
 
     private void getRestaurantes(){
         try {
-            SQLiteDatabase db = openOrCreateDatabase("aracatitour", MODE_PRIVATE, null);
+            SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
 
             Cursor cursor = db.rawQuery("SELECT NOME, LATITUDE, LONGITUDE FROM RESTAURANTE", null);
 
@@ -87,8 +86,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 latitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LATITUDE")));
                 longitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LONGITUDE")));
                 nome = cursor.getString(cursor.getColumnIndex("NOME"));
+
                 LatLng latLng = new LatLng(latitude, longitude);
-                mMap.addMarker(new MarkerOptions().position(latLng).title(nome));
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(nome)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_restaurant)));
+
                 cursor.moveToNext();
             }
             cursor.close();
@@ -100,7 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getHoteis(){
         try {
-            SQLiteDatabase db = openOrCreateDatabase("aracatitour", MODE_PRIVATE, null);
+            SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
 
             Cursor cursor = db.rawQuery("SELECT NOME, LATITUDE, LONGITUDE FROM HOTEL", null);
 
@@ -109,8 +114,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 latitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LATITUDE")));
                 longitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LONGITUDE")));
                 nome = cursor.getString(cursor.getColumnIndex("NOME"));
+
                 LatLng latLng = new LatLng(latitude, longitude);
-                mMap.addMarker(new MarkerOptions().position(latLng).title(nome));
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(nome)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_hotel)));
+
                 cursor.moveToNext();
             }
             cursor.close();
@@ -122,7 +133,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getPontosHistoricos(){
         try {
-            SQLiteDatabase db = openOrCreateDatabase("aracatitour", MODE_PRIVATE, null);
+            SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
 
             Cursor cursor = db.rawQuery("SELECT NOME, LATITUDE, LONGITUDE FROM PONTO_HISTORICO", null);
 
@@ -132,8 +143,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 latitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LATITUDE")));
                 longitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("LONGITUDE")));
                 nome = cursor.getString(cursor.getColumnIndex("NOME"));
+
                 LatLng latLng = new LatLng(latitude, longitude);
-                mMap.addMarker(new MarkerOptions().position(latLng).title(nome));
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(nome)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_drop)));
+
                 cursor.moveToNext();
             }
             cursor.close();

@@ -1,9 +1,11 @@
 package br.edu.ifce.aracatitour.activity;
 
-import android.support.v7.app.ActionBar;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +23,7 @@ import br.edu.ifce.aracatitour.database.ManageDatabase;
 public class ListActivity extends AppCompatActivity {
 
     private int BUTTON;
+    private String ID_LISTA;
     ManageDatabase manageDatabase = new ManageDatabase(this);
     ArrayList<String> itens;
     ArrayAdapter<String> adapter;
@@ -31,8 +34,8 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         try{
             Bundle extra = getIntent().getExtras();
@@ -44,7 +47,8 @@ public class ListActivity extends AppCompatActivity {
             switch (BUTTON){
                 case 1:
 
-                    actionBar.setTitle(R.string.restaurantes);
+                    setSupportActionBar(toolbar);
+                    toolbar.setTitle(R.string.restaurantes);
 
                     itens = manageDatabase.getAllItens("RESTAURANTE", "NOME");
 
@@ -61,7 +65,25 @@ public class ListActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             Intent it = new Intent(ListActivity.this, DefaultActivity.class);
-                            it.putExtra("ID_LISTA", Integer.toString(i+1));
+                            String itemLista = listaItens.getItemAtPosition(i).toString();
+                            try{
+                                SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
+
+                                Cursor cursor = db.rawQuery("SELECT ID FROM RESTAURANTE WHERE NOME = '"
+                                        + itemLista + "'", null);
+
+                                cursor.moveToFirst();
+
+                                while (cursor != null){
+                                    ID_LISTA = cursor.getString(cursor.getColumnIndex("ID"));
+                                    cursor.moveToNext();
+                                }
+                                cursor.close();
+                                db.close();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            it.putExtra("ID_LISTA", ID_LISTA);
                             it.putExtra("TABELA", "RESTAURANTE");
                             startActivity(it);
                         }
@@ -70,7 +92,8 @@ public class ListActivity extends AppCompatActivity {
 
                 case 2:
 
-                    actionBar.setTitle(R.string.hoteis);
+                    setSupportActionBar(toolbar);
+                    toolbar.setTitle(R.string.hoteis);
 
                     itens = manageDatabase.getAllItens("HOTEL", "NOME");
 
@@ -87,7 +110,25 @@ public class ListActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             Intent it = new Intent(ListActivity.this, DefaultActivity.class);
-                            it.putExtra("ID_LISTA", Integer.toString(i+1));
+                            String itemLista = listaItens.getItemAtPosition(i).toString();
+                            try{
+                                SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
+
+                                Cursor cursor = db.rawQuery("SELECT ID FROM HOTEL WHERE NOME = '"
+                                        + itemLista + "'", null);
+
+                                cursor.moveToFirst();
+
+                                while (cursor != null){
+                                    ID_LISTA = cursor.getString(cursor.getColumnIndex("ID"));
+                                    cursor.moveToNext();
+                                }
+                                cursor.close();
+                                db.close();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            it.putExtra("ID_LISTA", ID_LISTA);
                             it.putExtra("TABELA", "HOTEL");
                             startActivity(it);
                         }
@@ -96,7 +137,8 @@ public class ListActivity extends AppCompatActivity {
 
                 case 3:
 
-                    actionBar.setTitle(R.string.pontos_historicos);
+                    setSupportActionBar(toolbar);
+                    toolbar.setTitle(R.string.pontos_historicos);
 
                     itens = manageDatabase.getAllItens("PONTO_HISTORICO", "NOME");
 
@@ -113,7 +155,25 @@ public class ListActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             Intent it = new Intent(ListActivity.this, DefaultActivity.class);
-                            it.putExtra("ID_LISTA", Integer.toString(i+1));
+                            String itemLista = listaItens.getItemAtPosition(i).toString();
+                            try{
+                                SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
+
+                                Cursor cursor = db.rawQuery("SELECT ID FROM PONTO_HISTORICO WHERE NOME = '"
+                                        + itemLista + "'", null);
+
+                                cursor.moveToFirst();
+
+                                while (cursor != null){
+                                    ID_LISTA = cursor.getString(cursor.getColumnIndex("ID"));
+                                    cursor.moveToNext();
+                                }
+                                cursor.close();
+                                db.close();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            it.putExtra("ID_LISTA", ID_LISTA);
                             it.putExtra("TABELA", "PONTO_HISTORICO");
                             startActivity(it);
                         }

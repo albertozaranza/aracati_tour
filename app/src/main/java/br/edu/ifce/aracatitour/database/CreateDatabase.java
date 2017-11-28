@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class CreateDatabase extends SQLiteOpenHelper {
 
     public CreateDatabase(Context context) {
-        super(context, "aracatitour", null, 1);
+        super(context, "aracati_tour", null, 3);
     }
 
     @Override
@@ -72,6 +72,9 @@ public class CreateDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE RESTAURANTE");
+        db.execSQL("DROP TABLE HOTEL");
+        db.execSQL("DROP TABLE PONTO_HISTORICO");
         onCreate(db);
     }
 
