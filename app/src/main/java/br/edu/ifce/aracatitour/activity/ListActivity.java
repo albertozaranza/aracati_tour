@@ -19,14 +19,17 @@ import java.util.ArrayList;
 
 import br.edu.ifce.aracatitour.R;
 import br.edu.ifce.aracatitour.database.ManageDatabase;
+import br.edu.ifce.aracatitour.model.Local;
 
 public class ListActivity extends AppCompatActivity {
 
     private int BUTTON;
     private String ID_LISTA;
+    private String TABELA;
     ManageDatabase manageDatabase = new ManageDatabase(this);
     ArrayList<String> itens;
-    ArrayAdapter<String> adapter;
+    ArrayList<Local> local;
+    ArrayAdapter adapter;
     ListView listaItens;
 
     @Override
@@ -49,137 +52,68 @@ public class ListActivity extends AppCompatActivity {
 
                     setSupportActionBar(toolbar);
                     toolbar.setTitle(R.string.restaurantes);
+                    TABELA = "RESTAURANTE";
+                    itens = manageDatabase.getAllItens(TABELA, "NOME");
 
-                    itens = manageDatabase.getAllItens("RESTAURANTE", "NOME");
-
-                    adapter = new ArrayAdapter<String>(
-                            this,
-                            android.R.layout.simple_list_item_1,
-                            itens
-                    );
-
-                    listaItens = (ListView) findViewById(R.id.listView);
-                    listaItens.setAdapter(adapter);
-
-                    listaItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Intent it = new Intent(ListActivity.this, DefaultActivity.class);
-                            String itemLista = listaItens.getItemAtPosition(i).toString();
-                            try{
-                                SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
-
-                                Cursor cursor = db.rawQuery("SELECT ID FROM RESTAURANTE WHERE NOME = '"
-                                        + itemLista + "'", null);
-
-                                cursor.moveToFirst();
-
-                                while (cursor != null){
-                                    ID_LISTA = cursor.getString(cursor.getColumnIndex("ID"));
-                                    cursor.moveToNext();
-                                }
-                                cursor.close();
-                                db.close();
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            it.putExtra("ID_LISTA", ID_LISTA);
-                            it.putExtra("TABELA", "RESTAURANTE");
-                            startActivity(it);
-                        }
-                    });
                     break;
 
                 case 2:
 
                     setSupportActionBar(toolbar);
                     toolbar.setTitle(R.string.hoteis);
+                    TABELA = "HOTEL";
+                    itens = manageDatabase.getAllItens(TABELA, "NOME");
 
-                    itens = manageDatabase.getAllItens("HOTEL", "NOME");
-
-                    adapter = new ArrayAdapter<String>(
-                            this,
-                            android.R.layout.simple_list_item_1,
-                            itens
-                    );
-
-                    listaItens = (ListView) findViewById(R.id.listView);
-                    listaItens.setAdapter(adapter);
-
-                    listaItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Intent it = new Intent(ListActivity.this, DefaultActivity.class);
-                            String itemLista = listaItens.getItemAtPosition(i).toString();
-                            try{
-                                SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
-
-                                Cursor cursor = db.rawQuery("SELECT ID FROM HOTEL WHERE NOME = '"
-                                        + itemLista + "'", null);
-
-                                cursor.moveToFirst();
-
-                                while (cursor != null){
-                                    ID_LISTA = cursor.getString(cursor.getColumnIndex("ID"));
-                                    cursor.moveToNext();
-                                }
-                                cursor.close();
-                                db.close();
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            it.putExtra("ID_LISTA", ID_LISTA);
-                            it.putExtra("TABELA", "HOTEL");
-                            startActivity(it);
-                        }
-                    });
                     break;
 
                 case 3:
 
                     setSupportActionBar(toolbar);
                     toolbar.setTitle(R.string.pontos_historicos);
+                    TABELA = "PONTO_HISTORICO";
+                    itens = manageDatabase.getAllItens(TABELA, "NOME");
 
-                    itens = manageDatabase.getAllItens("PONTO_HISTORICO", "NOME");
-
-                    adapter = new ArrayAdapter<String>(
-                            this,
-                            android.R.layout.simple_list_item_1,
-                            itens
-                    );
-
-                    listaItens = (ListView) findViewById(R.id.listView);
-                    listaItens.setAdapter(adapter);
-
-                    listaItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Intent it = new Intent(ListActivity.this, DefaultActivity.class);
-                            String itemLista = listaItens.getItemAtPosition(i).toString();
-                            try{
-                                SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
-
-                                Cursor cursor = db.rawQuery("SELECT ID FROM PONTO_HISTORICO WHERE NOME = '"
-                                        + itemLista + "'", null);
-
-                                cursor.moveToFirst();
-
-                                while (cursor != null){
-                                    ID_LISTA = cursor.getString(cursor.getColumnIndex("ID"));
-                                    cursor.moveToNext();
-                                }
-                                cursor.close();
-                                db.close();
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            it.putExtra("ID_LISTA", ID_LISTA);
-                            it.putExtra("TABELA", "PONTO_HISTORICO");
-                            startActivity(it);
-                        }
-                    });
                     break;
             }
+
+            adapter = new ArrayAdapter<String>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    itens
+            );
+
+            //adapter = new LocalAdapter(getApplicationContext(), local);
+
+            listaItens = (ListView) findViewById(R.id.listView);
+            listaItens.setAdapter(adapter);
+
+            listaItens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Intent it = new Intent(ListActivity.this, DefaultActivity.class);
+                    String itemLista = listaItens.getItemAtPosition(i).toString();
+                    try{
+                        SQLiteDatabase db = openOrCreateDatabase("aracati_tour", MODE_PRIVATE, null);
+
+                        Cursor cursor = db.rawQuery("SELECT ID FROM "+ TABELA +" WHERE NOME = '"
+                                + itemLista + "'", null);
+
+                        cursor.moveToFirst();
+
+                        while (cursor != null){
+                            ID_LISTA = cursor.getString(cursor.getColumnIndex("ID"));
+                            cursor.moveToNext();
+                        }
+                        cursor.close();
+                        db.close();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    it.putExtra("ID_LISTA", ID_LISTA);
+                    it.putExtra("TABELA", TABELA);
+                    startActivity(it);
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }

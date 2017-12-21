@@ -72,9 +72,9 @@ public class CreateDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE RESTAURANTE");
-        db.execSQL("DROP TABLE HOTEL");
-        db.execSQL("DROP TABLE PONTO_HISTORICO");
+        db.execSQL("DROP TABLE IF EXISTS RESTAURANTE");
+        db.execSQL("DROP TABLE IF EXISTS HOTEL");
+        db.execSQL("DROP TABLE IF EXISTS PONTO_HISTORICO");
         onCreate(db);
     }
 
